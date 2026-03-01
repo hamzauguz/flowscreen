@@ -8,3 +8,7 @@ This project is in early feedback phase. Versioning will follow [Semantic Versio
 - Free-first architecture
 - Optional Provider
 - Core error templates
+
+## 0.1.1
+
+- Update default bootstrap base URL to https://api.flowscreen.io

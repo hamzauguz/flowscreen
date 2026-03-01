@@ -23,7 +23,7 @@ export interface BootstrapResponse {
 }
 
 /** Default FlowScreen backend base URL. Override with apiBaseUrl for development. */
-export const DEFAULT_BOOTSTRAP_BASE_URL = "https://bootstrap.errorflow.io";
+export const DEFAULT_BOOTSTRAP_BASE_URL = "https://api.flowscreen.io";
 
 export interface ScreenFlowProviderProps {
   /** Project public key for entitlement. */
@@ -35,13 +35,25 @@ export interface ScreenFlowProviderProps {
   disableCache?: boolean;
 }
 
+/** Normalize base URL: add https if missing, fix protocol, strip trailing slashes and /bootstrap so path is appended correctly. */
+function normalizeBaseUrl(url: string): string {
+  let u = url.trim();
+  if (!u.startsWith("http")) {
+    u = `https://${u}`;
+  } else {
+    u = u.replace(/^https:(?!\/\/)/i, "https://").replace(/^http:(?!\/\/)/i, "http://");
+  }
+  u = u.replace(/\/+$/, "");
+  u = u.replace(/\/bootstrap\/?$/i, "");
+  return u;
+}
+
 /**
  * Optional. Use only for pro/enterprise; without Provider, SDK works in free mode (no network).
  */
 function buildBootstrapUrl(apiBaseUrl: string | undefined): string {
-  const base = apiBaseUrl ?? DEFAULT_BOOTSTRAP_BASE_URL;
-  const normalized = base.replace(/\/$/, "");
-  return `${normalized}/bootstrap`;
+  const base = normalizeBaseUrl(apiBaseUrl ?? DEFAULT_BOOTSTRAP_BASE_URL);
+  return `${base}/bootstrap`;
 }
 
 type BootstrapState = {
