@@ -1,0 +1,8 @@
+node_modules/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+# Build output (run "npm run build" before publish or file: install)
+dist

@@ -1,0 +1,187 @@
+{
+  "400": {
+    "title": "Bad Request",
+    "description": "The request could not be understood by the server.",
+    "hint": "Please check your request and try again."
+  },
+  "401": {
+    "title": "Unauthorized",
+    "description": "You need to be authenticated to access this page.",
+    "hint": "Please log in and try again."
+  },
+  "403": {
+    "title": "Forbidden",
+    "description": "You don't have permission to access this resource.",
+    "hint": "Please contact support if you believe this is an error."
+  },
+  "404": {
+    "title": "Not Found",
+    "description": "The page you're looking for doesn't exist.",
+    "hint": "Please check the URL and try again."
+  },
+  "405": {
+    "title": "Method Not Allowed",
+    "description": "The request method is not allowed for this resource.",
+    "hint": "Please check the request method and try again."
+  },
+  "406": {
+    "title": "Not Acceptable",
+    "description": "The server cannot produce a response matching the acceptable values.",
+    "hint": "Please adjust your request and try again."
+  },
+  "408": {
+    "title": "Request Timeout",
+    "description": "The server timed out waiting for the request.",
+    "hint": "Please try again later."
+  },
+  "409": {
+    "title": "Conflict",
+    "description": "The request could not be completed due to a conflict.",
+    "hint": "Please resolve the conflict and try again."
+  },
+  "410": {
+    "title": "Gone",
+    "description": "The requested resource is no longer available.",
+    "hint": "The resource has been permanently removed."
+  },
+  "411": {
+    "title": "Length Required",
+    "description": "The request did not specify the length of its content.",
+    "hint": "Please include the content length and try again."
+  },
+  "412": {
+    "title": "Precondition Failed",
+    "description": "The server does not meet one of the preconditions.",
+    "hint": "Please check the preconditions and try again."
+  },
+  "413": {
+    "title": "Payload Too Large",
+    "description": "The request payload is too large.",
+    "hint": "Please reduce the payload size and try again."
+  },
+  "414": {
+    "title": "URI Too Long",
+    "description": "The URI provided was too long for the server to process.",
+    "hint": "Please use a shorter URL and try again."
+  },
+  "415": {
+    "title": "Unsupported Media Type",
+    "description": "The media format is not supported by the server.",
+    "hint": "Please use a supported media format and try again."
+  },
+  "416": {
+    "title": "Range Not Satisfiable",
+    "description": "The range specified cannot be fulfilled.",
+    "hint": "Please check the range and try again."
+  },
+  "417": {
+    "title": "Expectation Failed",
+    "description": "The server cannot meet the requirements of the Expect request-header.",
+    "hint": "Please adjust your expectations and try again."
+  },
+  "418": {
+    "title": "I'm a teapot",
+    "description": "The server refuses to brew coffee because it is a teapot.",
+    "hint": "This is a joke status code. Please try a different request."
+  },
+  "422": {
+    "title": "Unprocessable Entity",
+    "description": "The request was well-formed but contains semantic errors.",
+    "hint": "Please check your input and try again."
+  },
+  "423": {
+    "title": "Locked",
+    "description": "The resource that is being accessed is locked.",
+    "hint": "Please wait and try again later."
+  },
+  "424": {
+    "title": "Failed Dependency",
+    "description": "The request failed because it depended on another request that failed.",
+    "hint": "Please resolve the dependency issue and try again."
+  },
+  "425": {
+    "title": "Too Early",
+    "description": "The server is unwilling to risk processing a request that might be replayed.",
+    "hint": "Please try again later."
+  },
+  "426": {
+    "title": "Upgrade Required",
+    "description": "The server refuses to perform the request using the current protocol.",
+    "hint": "Please upgrade your protocol and try again."
+  },
+  "428": {
+    "title": "Precondition Required",
+    "description": "The server requires the request to be conditional.",
+    "hint": "Please include the required precondition and try again."
+  },
+  "429": {
+    "title": "Too Many Requests",
+    "description": "You have sent too many requests in a given amount of time.",
+    "hint": "Please wait a moment and try again."
+  },
+  "431": {
+    "title": "Request Header Fields Too Large",
+    "description": "The server is unwilling to process the request because its header fields are too large.",
+    "hint": "Please reduce the header size and try again."
+  },
+  "451": {
+    "title": "Unavailable For Legal Reasons",
+    "description": "The resource is unavailable due to legal reasons.",
+    "hint": "This resource is not available in your region."
+  },
+  "500": {
+    "title": "Internal Server Error",
+    "description": "Something went wrong on our end. We're working to fix it.",
+    "hint": "Please try again later or contact support if the problem persists."
+  },
+  "501": {
+    "title": "Not Implemented",
+    "description": "The server does not support the functionality required to fulfill the request.",
+    "hint": "This feature is not available yet."
+  },
+  "502": {
+    "title": "Bad Gateway",
+    "description": "The server received an invalid response from an upstream server.",
+    "hint": "Please try again later."
+  },
+  "503": {
+    "title": "Service Unavailable",
+    "description": "The server is temporarily unable to handle the request.",
+    "hint": "Please try again later."
+  },
+  "504": {
+    "title": "Gateway Timeout",
+    "description": "The server did not receive a timely response from an upstream server.",
+    "hint": "Please try again later."
+  },
+  "505": {
+    "title": "HTTP Version Not Supported",
+    "description": "The server does not support the HTTP protocol version used in the request.",
+    "hint": "Please use a supported HTTP version."
+  },
+  "506": {
+    "title": "Variant Also Negotiates",
+    "description": "The server has an internal configuration error.",
+    "hint": "Please try again later."
+  },
+  "507": {
+    "title": "Insufficient Storage",
+    "description": "The server is unable to store the representation needed to complete the request.",
+    "hint": "Please try again later or contact support."
+  },
+  "508": {
+    "title": "Loop Detected",
+    "description": "The server detected an infinite loop while processing the request.",
+    "hint": "Please try again later."
+  },
+  "510": {
+    "title": "Not Extended",
+    "description": "Further extensions to the request are required.",
+    "hint": "Please provide the required extensions and try again."
+  },
+  "511": {
+    "title": "Network Authentication Required",
+    "description": "Network authentication is required to access this resource.",
+    "hint": "Please authenticate with the network and try again."
+  }
+}
