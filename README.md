@@ -53,7 +53,11 @@ npm install flowscreen
 Use **`FlowScreen`** for any state screen (errors, empty states, maintenance, unauthorized, etc.).
 
 ```tsx
-import { FlowScreen, ScreenFlowProvider, useFlowScreen } from "flowscreen/react";
+import {
+  FlowScreen,
+  ScreenFlowProvider,
+  useFlowScreen,
+} from "flowscreen/react";
 
 export default function Page() {
   return <FlowScreen template="error-cloudflare" code="503" />;
@@ -217,7 +221,7 @@ Unknown or premium-only template IDs fall back to **error-minimal**.
 
 ## Documentation
 
-See full documentation at [https://flowscreen.dev/docs](https://flowscreen.dev/docs).
+See full documentation at [https://flowscreen.io/docs/get-started](https://flowscreen.io/docs/get-started).
 
 ---
 

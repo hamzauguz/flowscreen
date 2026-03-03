@@ -1,6 +1,32 @@
 {
   "name": "flowscreen",
   "version": "0.1.2",
+  "description": "Beautiful, production-ready error and state screens for React and Next.js.",
+  "homepage": "https://github.com/hamzauguz/flowscreen#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hamzauguz/flowscreen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hamzauguz/flowscreen/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hamza Uguz",
+    "url": "https://github.com/hamzauguz"
+  },
+  "keywords": [
+    "react",
+    "nextjs",
+    "error-page",
+    "error-screen",
+    "state-screen",
+    "empty-state",
+    "maintenance-page",
+    "saas",
+    "ui-library",
+    "typescript"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",

@@ -6,7 +6,7 @@ Security is important to us. FlowScreen is currently in beta; a formal security 
 
 If you discover a security vulnerability, please report it by email:
 
-**security@flowscreen.dev**
+**hello@hamzauguz.dev**
 
 Do not open public issues for security concerns. Public disclosure before a fix is available can put users at risk.
 
