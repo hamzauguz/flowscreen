@@ -12,3 +12,10 @@ This project is in early feedback phase. Versioning will follow [Semantic Versio
 ## 0.1.1
 
 - Update default bootstrap base URL to https://api.flowscreen.io
+
+## 0.1.2
+
+### Fixed
+
+- Fix missing dist folder in published npm package
+- Ensure compiled files are included in npm release
