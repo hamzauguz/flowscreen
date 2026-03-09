@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * Free plan: Provider not necessary; no network calls.
- * Pro/Enterprise: Provider necessary (bootstrap returns plan + enabledTemplates + ttl).
+ * FlowScreen is currently fully free. No provider is required; no network calls are made.
+ * When provider is missing, useFlowScreen() returns FREE_CONTEXT and the SDK works in free mode.
+ * ScreenFlowProvider is optional and reserved for future use: analytics, monitoring, alerting.
  */
 
 import { createContext, useContext } from "react";
-import { FREE_TEMPLATE_IDS } from "../core/registry";
 
 export type Plan = "free" | "pro" | "enterprise";
 
@@ -17,8 +17,8 @@ export interface ScreenFlowContextValue {
   ttl: number;
 }
 
-/** Free default allowlist: basic + free templates (error-modern, error-minimal, error-classic, error-cloudflare). */
-const DEFAULT_FREE_TEMPLATES = ["basic", ...FREE_TEMPLATE_IDS];
+/** All templates are free. Use ["*"] so any consumer that still checks entitlement sees "all allowed". */
+const DEFAULT_FREE_TEMPLATES = ["*"];
 const DEFAULT_TTL = 0;
 
 export const FREE_CONTEXT: ScreenFlowContextValue = {
@@ -33,9 +33,11 @@ export const ScreenFlowContext = createContext<ScreenFlowContextValue | null>(
   null
 );
 
+/** Returns context when inside ScreenFlowProvider; otherwise FREE_CONTEXT. No error if provider is missing. */
 export function useFlowScreen(): ScreenFlowContextValue {
   const context = useContext(ScreenFlowContext);
   if (context === null) {
+    // Free mode fallback: no provider, no analytics, all templates allowed.
     return FREE_CONTEXT;
   }
   return context;

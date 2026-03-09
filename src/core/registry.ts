@@ -1,4 +1,5 @@
 // Template registry - central registry + safe fallback. All templates live in SDK.
+// All templates are currently free; premium/free gating is disabled and reserved for future use.
 
 import type { FlowScreenTemplate } from "../templates/types";
 import { cloudflareErrorTemplate } from "../templates/error/error-cloudflare";
@@ -22,7 +23,7 @@ import {
   maintenancePlayfulRoadTemplate,
 } from "../templates/maintenance";
 
-/** Template IDs that are free (no Provider required; allowed even when enabledTemplates is restricted). */
+/** Template IDs that were previously free-only. Kept for backward compatibility; all templates are now free. */
 export const FREE_TEMPLATE_IDS = [
   "error-modern",
   "error-minimal",
@@ -38,7 +39,7 @@ export const FREE_TEMPLATE_IDS = [
   "maintenance-playful-road",
 ] as const;
 
-/** Default free template ID (safe fallback for unknown or premium-only template in free plan). */
+/** Default fallback template ID for unknown template IDs (safe fallback). */
 export const DEFAULT_FREE_TEMPLATE_ID = "error-minimal";
 
 export type TemplateType =
@@ -65,31 +66,32 @@ export type TemplateType =
   | "maintenance-electric-pro"
   | "maintenance-playful-road";
 
-/** Access level per template. Free templates bypass enabledTemplates check. */
-const templateAccess: Record<string, "free" | "premium"> = {
-  basic: "free",
-  "error-cloudflare": "free",
-  "error-minimal": "free",
-  "error-modern": "free",
-  "error-classic": "free",
-  "error-parallax": "premium",
-  "error-animated": "premium",
-  "error-sad-bear": "premium",
-  "error-character-illustration": "premium",
-  "error-sleeping-moon": "premium",
-  "error-amazon": "free",
-  "error-mailchimp": "free",
-  "error-mailchimp-pro": "premium",
-  "empty-basic": "free",
-  "empty-no-results": "free",
-  "empty-inside-out": "free",
-  "empty-not-found-666": "premium",
-  "maintenance-basic": "free",
-  "maintenance-under-construction": "free",
-  "maintenance-offline": "premium",
-  "maintenance-electric-pro": "premium",
-  "maintenance-playful-road": "free",
-};
+// Premium template validation disabled. All templates are currently free.
+// Reserved for future entitlement/analytics when backend is re-enabled.
+// const templateAccess: Record<string, "free" | "premium"> = {
+//   basic: "free",
+//   "error-cloudflare": "free",
+//   "error-minimal": "free",
+//   "error-modern": "free",
+//   "error-classic": "free",
+//   "error-parallax": "premium",
+//   "error-animated": "premium",
+//   "error-sad-bear": "premium",
+//   "error-character-illustration": "premium",
+//   "error-sleeping-moon": "premium",
+//   "error-amazon": "free",
+//   "error-mailchimp": "free",
+//   "error-mailchimp-pro": "premium",
+//   "empty-basic": "free",
+//   "empty-no-results": "free",
+//   "empty-inside-out": "free",
+//   "empty-not-found-666": "premium",
+//   "maintenance-basic": "free",
+//   "maintenance-under-construction": "free",
+//   "maintenance-offline": "premium",
+//   "maintenance-electric-pro": "premium",
+//   "maintenance-playful-road": "free",
+// };
 
 const templates: Record<string, FlowScreenTemplate> = {
   basic: minimalErrorTemplate,
@@ -138,15 +140,16 @@ export function getResolvedTemplateId(id: string): string {
 }
 
 /**
- * Whether a template is allowed by entitlement.
- * - access "free" => always allowed (regardless of enabledTemplates).
- * - access "premium" => allowed only if enabledTemplates includes "*" or the template id.
+ * Whether a template is allowed. All templates are currently free; no entitlement check.
+ * Premium/free gating disabled. Reserved for future analytics/monitoring when provider is used.
  */
 export function isTemplateEnabled(
-  templateId: string,
-  enabledTemplates: string[]
+  _templateId: string,
+  _enabledTemplates: string[]
 ): boolean {
-  if (templateAccess[templateId] === "free") return true;
-  if (enabledTemplates.includes("*")) return true;
-  return enabledTemplates.includes(templateId);
+  return true;
+  // Premium template validation disabled. All templates are currently free.
+  // if (templateAccess[templateId] === "free") return true;
+  // if (enabledTemplates.includes("*")) return true;
+  // return enabledTemplates.includes(templateId);
 }

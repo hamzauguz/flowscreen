@@ -1,16 +1,12 @@
-// React wrapper component for renderFlowScreen. Templates from registry; unknown or disallowed ids fall back to "error-minimal".
+// React wrapper component for renderFlowScreen. Templates from registry; unknown ids fall back to "error-minimal".
+// FlowScreen is currently fully free: no provider required, no premium gating. Provider is optional for future analytics/monitoring.
 
 "use client";
 
 import { useEffect, useRef } from "react";
 import { renderFlowScreen } from "../core/renderFlowScreen";
 import type { TemplateType } from "../core/registry";
-import {
-  getTemplateSafe,
-  getResolvedTemplateId,
-  isTemplateEnabled,
-  DEFAULT_FREE_TEMPLATE_ID,
-} from "../core/registry";
+import { getTemplateSafe, getResolvedTemplateId } from "../core/registry";
 import type { FlowScreenSchema } from "../schema";
 import type { FlowScreenTheme, FlowScreenButton } from "../types";
 import { FLOWSCREEN_ASSETS_BASE_URL } from "../constants";
@@ -54,7 +50,7 @@ function mergeClasses(...parts: (string | undefined)[]): string {
 }
 
 export interface FlowScreenProps {
-  /** Template ID from registry (e.g. "basic", "error-minimal"). Unknown or premium-only in free plan fall back to "error-minimal". */
+  /** Template ID from registry (e.g. "cloudflare", "error-minimal"). Unknown IDs fall back to "error-minimal". All templates are free; no provider required. */
   template: TemplateType | string;
   code?: string;
   title?: string;
@@ -96,11 +92,9 @@ export function FlowScreen({
   className,
 }: FlowScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { plan, enabledTemplates } = useFlowScreen();
-
-  // Pro/Enterprise: allow all templates regardless of enabledTemplates
-  const effectiveEnabledTemplates =
-    plan === "pro" || plan === "enterprise" ? ["*"] : enabledTemplates;
+  // Provider is optional. When missing, useFlowScreen() returns FREE_CONTEXT; we still render the requested template.
+  // No error is thrown; no analytics run. Provider reserved for future analytics, monitoring, alerting.
+  const _ctx = useFlowScreen();
 
   // Stable random pet for error-amazon (one pet object = image + name; set once on mount, no flicker).
   const petRef = useRef(
@@ -112,19 +106,13 @@ export function FlowScreen({
     INSIDE_OUT_IMAGES[Math.floor(Math.random() * INSIDE_OUT_IMAGES.length)],
   );
 
-  // Resolve template id; fallback to "error-minimal" if unknown. PRO empty template falls back to empty-basic; PRO maintenance-electric-pro falls back to maintenance-under-construction.
+  // All templates are free. Resolve template id; only fallback to "error-minimal" for unknown ids.
+  // Premium/free gating disabled; no template availability checks or API key validation.
   const requestedId = getResolvedTemplateId(String(template));
-  // Entitlement: free templates always allowed; pro/enterprise get all; others only if effectiveEnabledTemplates includes "*" or the template id.
-  const resolvedTemplateId = isTemplateEnabled(
-    requestedId,
-    effectiveEnabledTemplates
-  )
-    ? requestedId
-    : requestedId === "empty-not-found-666"
-      ? "empty-basic"
-      : requestedId === "maintenance-electric-pro"
-        ? "maintenance-under-construction"
-        : DEFAULT_FREE_TEMPLATE_ID;
+  const resolvedTemplateId = requestedId;
+  // Premium template validation disabled. All templates are currently free.
+  // const effectiveEnabledTemplates = plan === "pro" || plan === "enterprise" ? ["*"] : enabledTemplates;
+  // const resolvedTemplateId = isTemplateEnabled(requestedId, effectiveEnabledTemplates) ? requestedId : ...
   const templateData = getTemplateSafe(resolvedTemplateId);
 
   // For empty/maintenance templates, code is optional (default ""); for error templates, default "404".
@@ -986,8 +974,6 @@ export function FlowScreen({
     template,
     templateData,
     resolvedTemplateId,
-    plan,
-    enabledTemplates,
     effectiveCode,
     finalTitle,
     finalDescription,

@@ -1,6 +1,7 @@
 /**
  * Bootstrap cache: in-memory + localStorage with TTL (in seconds, from API).
- * Used by ScreenFlowProvider to avoid calling the FlowScreen backend on every mount.
+ * Reserved for future use when ScreenFlowProvider re-enables bootstrap/entitlement calls.
+ * Currently no network requests are made; this cache is unused in the free version.
  */
 
 import type { Plan } from "./ScreenFlowContext";

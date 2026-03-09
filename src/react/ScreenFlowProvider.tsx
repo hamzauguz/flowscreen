@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * ScreenFlowProvider is optional. FlowScreen works without it (fully free, no network).
+ * When provided, it is reserved for future analytics, monitoring, and alerting.
+ * All service calls are currently disabled; no fetch requests are made.
+ */
+
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ScreenFlowContext, FREE_CONTEXT, type Plan } from "./ScreenFlowContext";
 import {
@@ -26,12 +32,12 @@ export interface BootstrapResponse {
 export const DEFAULT_BOOTSTRAP_BASE_URL = "https://api.flowscreen.io";
 
 export interface ScreenFlowProviderProps {
-  /** Project public key for entitlement. */
-  projectKey: string;
+  /** Optional. Reserved for future entitlement/analytics when backend is re-enabled. */
+  projectKey?: string;
   children: ReactNode;
-  /** Backend base URL. Provider calls POST {apiBaseUrl}/bootstrap. */
+  /** Backend base URL. Reserved for future use when bootstrap is re-enabled. */
   apiBaseUrl?: string;
-  /** When true, skip cache and refetch (e.g. after changing plan in DB). */
+  /** When true, skip cache and refetch. Reserved for future use. */
   disableCache?: boolean;
 }
 
@@ -107,6 +113,22 @@ export function ScreenFlowProvider({
       }));
     }
 
+    // --- Free mode: no backend dependency. Resolve immediately with free defaults. ---
+    // Future feature: analytics / monitoring. When re-enabled, uncomment the block below
+    // and remove the immediate applyBootstrap(FREE_CONTEXT) call.
+    applyBootstrap({
+      plan: FREE_CONTEXT.plan,
+      enabledTemplates: FREE_CONTEXT.enabledTemplates,
+      ttl: FREE_CONTEXT.ttl,
+    });
+    return () => {
+      cancelled = true;
+    };
+
+    // Future feature: analytics / monitoring
+    // The requests below are intentionally disabled for the open-source free version.
+    // They will be used later for entitlement checks and optional analytics/monitoring.
+    /*
     const cached = !disableCache && getCachedBootstrap(projectKey);
     if (cached) {
       applyBootstrap({
@@ -229,7 +251,8 @@ export function ScreenFlowProvider({
     return () => {
       cancelled = true;
     };
-  }, [projectKey, bootstrapUrl, disableCache]);
+    */
+  }, [projectKey, bootstrapUrl, disableCache]); // projectKey/bootstrapUrl/disableCache used only in commented future block
 
   const publicValue = useMemo(
     () => ({ plan, enabledTemplates, ttl }),
