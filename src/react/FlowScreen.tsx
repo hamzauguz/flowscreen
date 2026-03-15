@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useLayoutEffect, useRef, type CSSProperties } from "react";
 import { renderFlowScreen } from "../core/renderFlowScreen";
 import type { TemplateType } from "../core/registry";
 import { getTemplateSafe, getResolvedTemplateId } from "../core/registry";
@@ -178,7 +178,9 @@ export function FlowScreen({
   const effectiveHideButton =
     hideButton || (resolvedTemplateId === "empty-basic" && button == null);
 
-  useEffect(() => {
+  // useLayoutEffect ensures template HTML and CSS are in the DOM before first paint,
+  // avoiding a flash of wrong text colors (e.g. dark text on dark background in error-modern).
+  useLayoutEffect(() => {
     if (containerRef.current) {
       // Convert props to schema format
       const blocks: FlowScreenSchema["blocks"] = [];
