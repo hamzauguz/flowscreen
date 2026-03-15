@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { renderFlowScreen } from "../core/renderFlowScreen";
 import type { TemplateType } from "../core/registry";
 import { getTemplateSafe, getResolvedTemplateId } from "../core/registry";
@@ -43,6 +43,15 @@ export type FlowLayout = "fullscreen" | "contained";
 const layoutClasses: Record<FlowLayout, string> = {
   fullscreen: "fixed inset-0 min-h-screen z-50",
   contained: "relative w-full",
+};
+
+/** Inline styles for contained layout so the component fills the parent in flex/grid layouts. */
+const containedLayoutStyle: CSSProperties = {
+  width: "100%",
+  flex: 1,
+  minHeight: "100%",
+  minWidth: 0,
+  boxSizing: "border-box",
 };
 
 function mergeClasses(...parts: (string | undefined)[]): string {
@@ -988,8 +997,15 @@ export function FlowScreen({
   ]);
 
   const wrapperClassName = mergeClasses(layoutClasses[layout], className);
+  const wrapperStyle = layout === "contained" ? containedLayoutStyle : undefined;
 
-  return <div ref={containerRef} className={wrapperClassName || undefined} />;
+  return (
+    <div
+      ref={containerRef}
+      className={wrapperClassName || undefined}
+      style={wrapperStyle}
+    />
+  );
 }
 
 function escapeHtml(text: string): string {
