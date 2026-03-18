@@ -41,7 +41,12 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
 
   // Inject CSS
   const styleId = `flowscreen-${template}-style`;
-  if (!document.getElementById(styleId)) {
+  const existingStyle = document.getElementById(styleId) as HTMLStyleElement | null;
+  if (existingStyle) {
+    if (existingStyle.textContent !== templateData.css) {
+      existingStyle.textContent = templateData.css;
+    }
+  } else {
     const style = document.createElement("style");
     style.id = styleId;
     style.textContent = templateData.css;
@@ -163,43 +168,75 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
   // Inject parallax JavaScript for parallax template
   if (template === "error-parallax") {
     const scriptId = `flowscreen-${template}-script`;
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement("script");
-      script.id = scriptId;
-      script.textContent = `
-        (function() {
-          const scene = document.getElementById('ef-parallax-scene');
-          if (!scene) return;
-          
-          const layers = scene.querySelectorAll('.ef-parallax-layer[data-depth]');
-          
-          function updateParallax(e) {
-            const rect = scene.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const mouseX = (e.clientX || e.touches?.[0]?.clientX || centerX) - centerX;
-            const mouseY = (e.clientY || e.touches?.[0]?.clientY || centerY) - centerY;
-            
-            layers.forEach(function(layer) {
-              const depth = parseFloat(layer.getAttribute('data-depth')) || 0;
-              const moveX = (mouseX * depth) / 10;
-              const moveY = (mouseY * depth) / 10;
-              layer.style.transform = 'translate(calc(-50% + ' + moveX + 'px), calc(-50% + ' + moveY + 'px))';
-            });
-          }
-          
-          scene.addEventListener('mousemove', updateParallax);
-          scene.addEventListener('touchmove', updateParallax);
-          
-          scene.addEventListener('mouseleave', function() {
-            layers.forEach(function(layer) {
-              layer.style.transform = 'translate(-50%, -50%)';
-            });
-          });
-        })();
-      `;
-      document.head.appendChild(script);
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) {
+      existingScript.remove();
     }
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.textContent = `
+      (function() {
+        const wrapper = document.querySelector('.ef-parallax-wrapper');
+        const scene = document.getElementById('ef-parallax-scene');
+        if (!wrapper || !scene) return;
+
+        const layers = scene.querySelectorAll('.ef-parallax-layer[data-depth]');
+
+        function syncWrapperHeight() {
+          const parent = wrapper.parentElement;
+          const parentRect = parent ? parent.getBoundingClientRect() : null;
+          const parentH = parentRect ? parentRect.height : 0;
+
+          // If parent has a measurable height, fill it. Otherwise, fill the remaining viewport height
+          // (useful for layouts with a top bar above the embedded content).
+          let targetH = parentH;
+          if (!targetH || targetH < 1) {
+            const top = wrapper.getBoundingClientRect().top;
+            targetH = Math.max(1, window.innerHeight - top);
+          }
+
+          wrapper.style.height = targetH + 'px';
+          wrapper.style.minHeight = targetH + 'px';
+        }
+
+        syncWrapperHeight();
+
+        let ro;
+        if (typeof ResizeObserver !== 'undefined') {
+          ro = new ResizeObserver(syncWrapperHeight);
+          ro.observe(wrapper);
+          if (wrapper.parentElement) ro.observe(wrapper.parentElement);
+        } else {
+          window.addEventListener('resize', syncWrapperHeight);
+        }
+
+        function updateParallax(e) {
+          const rect = scene.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const mouseX = (e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || centerX) - centerX;
+          const mouseY = (e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || centerY) - centerY;
+
+          layers.forEach(function(layer) {
+            const depth = parseFloat(layer.getAttribute('data-depth')) || 0;
+            const moveX = (mouseX * depth) / 10;
+            const moveY = (mouseY * depth) / 10;
+            layer.style.transform = 'translate(calc(-50% + ' + moveX + 'px), calc(-50% + ' + moveY + 'px))';
+          });
+        }
+
+        scene.addEventListener('mousemove', updateParallax);
+        scene.addEventListener('touchmove', updateParallax);
+
+        scene.addEventListener('mouseleave', function() {
+          layers.forEach(function(layer) {
+            layer.style.transform = 'translate(-50%, -50%)';
+          });
+        });
+      })();
+    `;
+    document.head.appendChild(script);
   }
 
   if (template === "error-animated") {

@@ -48,8 +48,9 @@ const layoutClasses: Record<FlowLayout, string> = {
 /** Inline styles for contained layout so the component fills the parent in flex/grid layouts. */
 const containedLayoutStyle: CSSProperties = {
   width: "100%",
+  height: "100%",
   flex: 1,
-  minHeight: "100%",
+  minHeight: 0,
   minWidth: 0,
   boxSizing: "border-box",
 };

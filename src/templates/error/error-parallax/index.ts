@@ -49,11 +49,12 @@ export const parallaxTemplate: FlowScreenTemplate = {
 </div>`,
   css: `/* Parallax Error Template - Scoped Styles */
 .ef-parallax-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   height: 100%;
+  min-height: 100%;
+  flex: 1;
+  min-height: max(360px, 100%);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
