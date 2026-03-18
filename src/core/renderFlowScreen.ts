@@ -252,6 +252,30 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       (function() {
         const container = document.querySelector('.ef-animated-404-wrapper');
         if (!container) return;
+
+        function syncWrapperHeight() {
+          const parent = container.parentElement;
+          const parentRect = parent ? parent.getBoundingClientRect() : null;
+          const parentH = parentRect ? parentRect.height : 0;
+
+          let targetH = parentH;
+          if (!targetH || targetH < 1) {
+            const top = container.getBoundingClientRect().top;
+            targetH = Math.max(1, window.innerHeight - top);
+          }
+
+          container.style.height = targetH + 'px';
+          container.style.minHeight = targetH + 'px';
+        }
+
+        syncWrapperHeight();
+        if (typeof ResizeObserver !== 'undefined') {
+          const ro = new ResizeObserver(syncWrapperHeight);
+          ro.observe(container);
+          if (container.parentElement) ro.observe(container.parentElement);
+        } else {
+          window.addEventListener('resize', syncWrapperHeight);
+        }
         
         const numbersContainer = container.querySelector('#ef-animated-404-numbers');
         if (numbersContainer) {
