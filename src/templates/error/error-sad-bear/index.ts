@@ -115,11 +115,12 @@ export const sadBearTemplate: FlowScreenTemplate = {
 /* Sad Bear Error Template - Scoped Styles */
 .ef-sad-bear-wrapper {
   --ef-sad-bear-light: 5;
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+  position: relative;
+  min-height: 100%;
+  flex: 1;
+  min-height: max(360px, 100%);
   overflow: hidden;
   font-family: var(--ef-font-family, 'Roboto Mono', monospace);
   background: hsl(0, 0%, calc(var(--ef-sad-bear-light) * 1%));
@@ -146,7 +147,7 @@ export const sadBearTemplate: FlowScreenTemplate = {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 .ef-sad-bear-container {

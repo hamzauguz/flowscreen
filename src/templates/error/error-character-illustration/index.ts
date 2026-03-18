@@ -172,11 +172,12 @@ export const characterIllustrationTemplate: FlowScreenTemplate = {
 </div>`,
   css: `/* Character Illustration Error Template - Scoped Styles */
 .ef-character-illustration-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+  position: relative;
+  min-height: 100%;
+  flex: 1;
+  min-height: max(360px, 100%);
   overflow: hidden;
   font-family: var(--ef-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   background-color: #fff;
@@ -192,7 +193,7 @@ export const characterIllustrationTemplate: FlowScreenTemplate = {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100%;
   padding: 2rem;
 }
 

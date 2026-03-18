@@ -410,6 +410,26 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "(function() {" +
       "  const container = document.querySelector('.ef-sad-bear-wrapper');" +
       "  if (!container) return;" +
+      "  function syncWrapperHeight() {" +
+      "    const parent = container.parentElement;" +
+      "    const parentRect = parent ? parent.getBoundingClientRect() : null;" +
+      "    const parentH = parentRect ? parentRect.height : 0;" +
+      "    let targetH = parentH;" +
+      "    if (!targetH || targetH < 1) {" +
+      "      const top = container.getBoundingClientRect().top;" +
+      "      targetH = Math.max(1, window.innerHeight - top);" +
+      "    }" +
+      "    container.style.height = targetH + 'px';" +
+      "    container.style.minHeight = targetH + 'px';" +
+      "  }" +
+      "  syncWrapperHeight();" +
+      "  if (typeof ResizeObserver !== 'undefined') {" +
+      "    const ro = new ResizeObserver(syncWrapperHeight);" +
+      "    ro.observe(container);" +
+      "    if (container.parentElement) ro.observe(container.parentElement);" +
+      "  } else {" +
+      "    window.addEventListener('resize', syncWrapperHeight);" +
+      "  }" +
       "  const codeElement = container.querySelector('#ef-sad-bear-code');" +
       "  const codeMessageElement = container.querySelector('#ef-sad-bear-code-message');" +
       "  const GLITCH_CHARS = " +
@@ -455,7 +475,7 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "      container.style.setProperty('--ef-sad-bear-Y', y);" +
       "    }" +
       "  }" +
-      "  document.body.addEventListener('mousemove', updatePosition);" +
+      "  container.addEventListener('mousemove', updatePosition);" +
       "  if (window.DeviceMotionEvent) { window.ondevicemotion = updatePosition; }" +
       "})();";
     document.head.appendChild(script);
@@ -476,6 +496,26 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "(function() {" +
       "  const container = document.querySelector('.ef-character-illustration-wrapper');" +
       "  if (!container) return;" +
+      "  function syncWrapperHeight() {" +
+      "    const parent = container.parentElement;" +
+      "    const parentRect = parent ? parent.getBoundingClientRect() : null;" +
+      "    const parentH = parentRect ? parentRect.height : 0;" +
+      "    let targetH = parentH;" +
+      "    if (!targetH || targetH < 1) {" +
+      "      const top = container.getBoundingClientRect().top;" +
+      "      targetH = Math.max(1, window.innerHeight - top);" +
+      "    }" +
+      "    container.style.height = targetH + 'px';" +
+      "    container.style.minHeight = targetH + 'px';" +
+      "  }" +
+      "  syncWrapperHeight();" +
+      "  if (typeof ResizeObserver !== 'undefined') {" +
+      "    const ro = new ResizeObserver(syncWrapperHeight);" +
+      "    ro.observe(container);" +
+      "    if (container.parentElement) ro.observe(container.parentElement);" +
+      "  } else {" +
+      "    window.addEventListener('resize', syncWrapperHeight);" +
+      "  }" +
       "  const codeText = " +
       escapedCode +
       ";" +
@@ -487,6 +527,46 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "  if (zeroElement && codeDigits[1]) { zeroElement.textContent = codeDigits[1]; }" +
       "  if (fourElement2 && codeDigits[2]) { fourElement2.textContent = codeDigits[2]; }" +
       "})();";
+    document.head.appendChild(script);
+  }
+
+  if (template === "error-sleeping-moon") {
+    const scriptId = `flowscreen-${template}-script`;
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.textContent = `
+      (function() {
+        const container = document.querySelector('.ef-sleeping-moon-wrapper');
+        if (!container) return;
+
+        function syncWrapperHeight() {
+          const parent = container.parentElement;
+          const parentRect = parent ? parent.getBoundingClientRect() : null;
+          const parentH = parentRect ? parentRect.height : 0;
+          let targetH = parentH;
+          if (!targetH || targetH < 1) {
+            const top = container.getBoundingClientRect().top;
+            targetH = Math.max(1, window.innerHeight - top);
+          }
+          container.style.height = targetH + 'px';
+          container.style.minHeight = targetH + 'px';
+        }
+
+        syncWrapperHeight();
+        if (typeof ResizeObserver !== 'undefined') {
+          const ro = new ResizeObserver(syncWrapperHeight);
+          ro.observe(container);
+          if (container.parentElement) ro.observe(container.parentElement);
+        } else {
+          window.addEventListener('resize', syncWrapperHeight);
+        }
+      })();
+    `;
     document.head.appendChild(script);
   }
 }
