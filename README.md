@@ -1,90 +1,51 @@
 # FlowScreen
 
-**Beautiful, production-ready error and state screens for React and Next.js.**  
-Free-first architecture. Optional entitlement system. No remote UI fetch.
+Beautiful production-ready **error & state screens for React and Next.js**.
 
-Templates live in the SDK. Your backend returns only entitlement config (`plan`, `enabledTemplates`, `ttl`). No Supabase required. No API routes required to get started.
+Drop-in UI for errors, empty states, maintenance pages and more.
 
----
+Templates are bundled in the SDK. No remote UI fetch.
 
-## Why FlowScreen?
+[Live Demo \u2192 https://flowscreen.io/demo](https://flowscreen.io/demo)
 
-- Drop-in error & state screens
-- No CSS setup required
-- Works instantly in free mode
-- Templates bundled in SDK
-- Optional entitlement system
-- SSR safe
-- Next.js ready
-- SaaS-friendly architecture
-
----
-
-## Architecture
-
-**FREE MODE**
-
-```
-App → FlowScreen SDK → Render (no network)
-```
-
-**PRO / ENTERPRISE MODE**
-
-```
-App → FlowScreen SDK → FlowScreen backend (/bootstrap) → Supabase (server only)
-```
-
-- The SDK **never** fetches templates.
-- The backend **never** returns HTML/CSS/JS.
-- The backend returns only JSON: `{ plan, enabledTemplates, ttl }`.
-
----
-
-## Installation
+![npm](https://img.shields.io/npm/v/flowscreen?label=npm&style=flat-square)
+![License](https://img.shields.io/npm/l/flowscreen?style=flat-square)
 
 ```bash
 npm install flowscreen
 ```
 
----
+## Live Demo
 
-## React
+Try FlowScreen templates interactively at: https://flowscreen.io/demo
+![FlowScreen Live Demo](/assets/flowscreen-livedemo.gif)
 
-Use **`FlowScreen`** for any state screen (errors, empty states, maintenance, unauthorized, etc.).
+## Preview
+
+![FlowScreen Sleeping Moon](/assets/error-sleeping-moon.gif)
+![FlowScreen Template Maintanence Offline](/assets/maintenance-offline.png)
+
+## Install
+
+```bash
+npm install flowscreen
+```
+
+## Quick Start
 
 ```tsx
-import {
-  FlowScreen,
-  ScreenFlowProvider,
-  useFlowScreen,
-} from "flowscreen/react";
+import { FlowScreen } from "flowscreen/react";
 
 export default function Page() {
   return <FlowScreen template="error-cloudflare" code="503" />;
 }
 ```
 
-Title and description are dynamic (from default messages by `code`, or overridable via props).
+Works instantly with no provider and no backend setup.
 
-**Without Provider**
+## Examples
 
-- Works in free mode
-- No network call
-- Free templates enabled
-- Premium templates fall back to `error-minimal`
-
-**With Provider**
-
-- Wrap with `<ScreenFlowProvider projectKey="pk_..." />`
-- Provider calls `POST /bootstrap`
-- Response cached (memory + localStorage)
-- Enables premium templates when entitled
-
----
-
-## Usage Examples
-
-### Error screen
+### Error Screen
 
 Code drives default title/description; override with `title` and `description` props.
 
@@ -98,7 +59,7 @@ Code drives default title/description; override with `title` and `description` p
 />
 ```
 
-### Empty state
+### Empty State
 
 No `code` required. Suited for dashboards and SaaS tables when there’s no data.
 
@@ -111,7 +72,7 @@ No `code` required. Suited for dashboards and SaaS tables when there’s no data
 />
 ```
 
-### Maintenance
+### Maintenance Screen
 
 Fits scheduled downtime or feature flags. SSR-safe.
 
@@ -124,7 +85,97 @@ Fits scheduled downtime or feature flags. SSR-safe.
 />
 ```
 
----
+### Hide fields (optional)
+
+Omit title or description when the template supports it.
+
+```tsx
+<FlowScreen template="error-cloudflare" code="404" hideTitle hideDescription />
+```
+
+## Templates
+
+### error-sleeping-moon
+
+![error-sleeping-moon](/assets/error-sleeping-moon.gif)
+
+### error-cloudflare
+
+![error-cloudflare](/assets/error-cloudflare.png)
+
+### error-parallax
+
+![error-parallax](/assets/error-parallax.png)
+
+### error-mailchimp-pro
+
+![error-mailchimp-pro](/assets/error-mailchimp-pro.gif)
+
+### error-amazon
+
+![error-amazon](/assets/error-amazon-ss.png)
+
+### Available Templates
+
+- `basic`
+- `error-cloudflare`
+- `error-minimal`
+- `error-modern`
+- `error-classic`
+- `error-parallax`
+- `error-animated`
+- `error-sad-bear`
+- `error-character-illustration`
+- `error-sleeping-moon`
+- `error-amazon`
+- `error-mailchimp`
+- `error-mailchimp-pro`
+- `empty-basic`
+- `empty-no-results`
+- `empty-inside-out`
+- `empty-not-found-666`
+- `maintenance-basic`
+- `maintenance-under-construction`
+- `maintenance-offline`
+- `maintenance-electric-pro`
+- `maintenance-playful-road`
+
+### Template categories
+
+- **Error** → HTTP errors (4xx, 5xx)
+- **Empty** → No-data states (tables, search, dashboards)
+- **Maintenance** → Downtime or feature-flag screens
+
+## Features
+
+- Works instantly in free mode
+- No backend required
+- SSR compatible
+- Next.js ready
+- Templates bundled in SDK
+- Zero CSS setup
+- Theme system
+- Safe fallback behavior
+
+### Who is this for?
+
+- SaaS applications
+- Dashboards
+- Developer tools
+- Internal admin panels
+- Products needing production-ready error states
+
+## Architecture
+
+```text
+App → FlowScreen SDK → Render (no network)
+```
+
+Key points:
+
+- The SDK **never** fetches templates.
+- Templates are bundled in the SDK.
+- No backend is required to render screens.
 
 ## Theming
 
@@ -144,112 +195,36 @@ Fits scheduled downtime or feature flags. SSR-safe.
 />
 ```
 
----
+## Docs
 
-## Hide fields
+See full documentation at https://flowscreen.io/docs/get-started.
 
-Omit title or description when the template supports it.
+### Next.js and local `file:` dependency
 
-```tsx
-<FlowScreen template="error-cloudflare" code="404" hideTitle hideDescription />
-```
+Next.js 16 (Turbopack) has a [known limitation](https://github.com/vercel/next.js/issues/85057) resolving local packages and subpath exports.
 
----
+Use:
 
-## useFlowScreen()
+- `transpilePackages: ["flowscreen"]`
+- and, if needed, `turbopack.root`
 
-Returns: `{ plan, enabledTemplates, ttl }`.
+Or use:
 
-- **plan**: `"free"` | `"pro"` | `"enterprise"`
-- **enabledTemplates**: `string[]` (free: basic + error-modern, error-minimal, error-classic, error-cloudflare; pro/enterprise: `["*"]` = all templates)
-- **ttl**: `number` (seconds)
-
-Without Provider: returns free defaults; never throws. No network call.
-
----
-
-## Free Templates & Fallback Behavior
-
-**Free templates** (no Provider required): **basic**, **error-modern**, **error-minimal**, **error-classic**, **error-cloudflare**.
-
-Unknown or premium-only template IDs fall back to **error-minimal**.
-
----
-
-## Available Templates
-
-- `basic` / `error-minimal` – minimal
-- `error-cloudflare` – Cloudflare-style
-- `error-modern` – modern gradient
-- `error-classic` – classic bordered
-- `error-parallax`, `error-animated`, `error-sad-bear`, `error-character-illustration`, `error-sleeping-moon`
-
----
-
-## Template categories
-
-- **Error** → HTTP errors (4xx, 5xx)
-- **Empty** → No-data states (tables, search, dashboards)
-- **Maintenance** → Downtime or feature-flag screens
-
----
-
-## Features
-
-- Free-first architecture
-- Optional Provider (never required)
-- Zero backend setup for customers
-- Templates bundled in SDK
-- SSR compatible
-- Next.js ready
-- Theme system
-- `classNames` escape hatch
-- Safe fallback in free mode
-- TTL-based entitlement cache
-
----
-
-## Who is this for?
-
-- SaaS applications
-- Dashboards
-- Developer tools
-- Internal admin panels
-- Products needing production-ready error states
-
----
-
-## Documentation
-
-See full documentation at [https://flowscreen.io/docs/get-started](https://flowscreen.io/docs/get-started).
-
----
-
-## Next.js and local `file:` dependency
-
-Next.js 16 (Turbopack) has a [known limitation](https://github.com/vercel/next.js/issues/85057) resolving local packages and subpath exports. Use `transpilePackages: ["flowscreen"]` and, if needed, `turbopack.root`. Or use `next build --webpack`.
-
----
-
-## Build
-
-```bash
-npm run build
-```
-
----
+- `next build --webpack`
 
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
----
+### Build
 
-## Security
+```bash
+npm run build
+```
+
+### Security
 
 See [SECURITY.md](./SECURITY.md).
-
----
 
 ## License
 
