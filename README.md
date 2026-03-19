@@ -5,7 +5,7 @@
 One component. Zero CSS. Production-ready UI.⚡️
 
 <p align="center">
-  <img src="./assets/flowscreen-livedemo.gif" alt="FlowScreen Demo" width="100%" />
+  <img src="https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/demo-place.gif" alt="FlowScreen Demo" width="100%" />
 </p>
 
 <p align="center">
@@ -32,8 +32,8 @@ npm install flowscreen
 
 ## Preview
 
-![FlowScreen Sleeping Moon](/assets/error-sleeping-moon.gif)
-![FlowScreen Template Maintanence Offline](/assets/maintenance-offline.png)
+![FlowScreen Sleeping Moon](https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/error-sleeping-moon.gif)
+![FlowScreen Template Maintanence Offline](https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/maintenance-offline.png)
 
 ## Install
 
@@ -107,23 +107,23 @@ Omit title or description when the template supports it.
 
 ### error-sleeping-moon
 
-![error-sleeping-moon](/assets/error-sleeping-moon.gif)
+![error-sleeping-moon](https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/error-sleeping-moon.gif)
 
 ### error-cloudflare
 
-![error-cloudflare](/assets/error-cloudflare.png)
+![error-cloudflare](https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/error-cloudflare.png)
 
 ### error-parallax
 
-![error-parallax](/assets/error-parallax.png)
+![error-parallax](https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/error-parallax.png)
 
 ### error-mailchimp-pro
 
-![error-mailchimp-pro](/assets/error-mailchimp-pro.gif)
+![error-mailchimp-pro](https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/error-mailchimp-pro.gif)
 
 ### error-amazon
 
-![error-amazon](/assets/error-amazon-ss.png)
+![error-amazon](https://uyqokbozbnnvazolqxoh.supabase.co/storage/v1/object/public/saas-file/error-amazon-ss.png)
 
 ### Available Templates
 
