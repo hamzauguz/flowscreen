@@ -1,24 +1,34 @@
 # FlowScreen
 
-Beautiful production-ready **error & state screens for React and Next.js**.
+## 🚫 Your error pages are ugly. Fix them in 3 seconds.
 
-Drop-in UI for errors, empty states, maintenance pages and more.
+One component. Zero CSS. Production-ready UI.⚡️
 
-Templates are bundled in the SDK. No remote UI fetch.
+<p align="center">
+  <img src="./assets/flowscreen-livedemo.gif" alt="FlowScreen Demo" width="100%" />
+</p>
 
-[Live Demo \u2192 https://flowscreen.io/demo](https://flowscreen.io/demo)
+<p align="center">
+  <a href="https://flowscreen.io/demo"><strong>🚀 Live Demo</strong></a> ·
+  <a href="https://flowscreen.io/docs/get-started"><strong>📚 Docs</strong></a>
+</p>
 
 ![npm](https://img.shields.io/npm/v/flowscreen?label=npm&style=flat-square)
 ![License](https://img.shields.io/npm/l/flowscreen?style=flat-square)
 
+### ⚡ 1 line is all it takes
+
+```tsx
+<FlowScreen template="error-cloudflare" code="503" />
+```
+
+That’s it. Your ugly error page is now production-ready.
+
+✨ No CSS · ⚡ Works instantly · 🧩 Drop-in component · 🛡 SSR safe · 🚀 Next.js ready
+
 ```bash
 npm install flowscreen
 ```
-
-## Live Demo
-
-Try FlowScreen templates interactively at: https://flowscreen.io/demo
-![FlowScreen Live Demo](/assets/flowscreen-livedemo.gif)
 
 ## Preview
 
