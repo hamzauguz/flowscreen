@@ -1,6 +1,6 @@
 {
   "name": "flowscreen",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Beautiful, production-ready error and state screens for React and Next.js.",
   "homepage": "https://github.com/hamzauguz/flowscreen#readme",
   "repository": {
