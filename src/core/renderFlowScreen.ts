@@ -41,7 +41,12 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
 
   // Inject CSS
   const styleId = `flowscreen-${template}-style`;
-  if (!document.getElementById(styleId)) {
+  const existingStyle = document.getElementById(styleId) as HTMLStyleElement | null;
+  if (existingStyle) {
+    if (existingStyle.textContent !== templateData.css) {
+      existingStyle.textContent = templateData.css;
+    }
+  } else {
     const style = document.createElement("style");
     style.id = styleId;
     style.textContent = templateData.css;
@@ -163,43 +168,75 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
   // Inject parallax JavaScript for parallax template
   if (template === "error-parallax") {
     const scriptId = `flowscreen-${template}-script`;
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement("script");
-      script.id = scriptId;
-      script.textContent = `
-        (function() {
-          const scene = document.getElementById('ef-parallax-scene');
-          if (!scene) return;
-          
-          const layers = scene.querySelectorAll('.ef-parallax-layer[data-depth]');
-          
-          function updateParallax(e) {
-            const rect = scene.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const mouseX = (e.clientX || e.touches?.[0]?.clientX || centerX) - centerX;
-            const mouseY = (e.clientY || e.touches?.[0]?.clientY || centerY) - centerY;
-            
-            layers.forEach(function(layer) {
-              const depth = parseFloat(layer.getAttribute('data-depth')) || 0;
-              const moveX = (mouseX * depth) / 10;
-              const moveY = (mouseY * depth) / 10;
-              layer.style.transform = 'translate(calc(-50% + ' + moveX + 'px), calc(-50% + ' + moveY + 'px))';
-            });
-          }
-          
-          scene.addEventListener('mousemove', updateParallax);
-          scene.addEventListener('touchmove', updateParallax);
-          
-          scene.addEventListener('mouseleave', function() {
-            layers.forEach(function(layer) {
-              layer.style.transform = 'translate(-50%, -50%)';
-            });
-          });
-        })();
-      `;
-      document.head.appendChild(script);
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) {
+      existingScript.remove();
     }
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.textContent = `
+      (function() {
+        const wrapper = document.querySelector('.ef-parallax-wrapper');
+        const scene = document.getElementById('ef-parallax-scene');
+        if (!wrapper || !scene) return;
+
+        const layers = scene.querySelectorAll('.ef-parallax-layer[data-depth]');
+
+        function syncWrapperHeight() {
+          const parent = wrapper.parentElement;
+          const parentRect = parent ? parent.getBoundingClientRect() : null;
+          const parentH = parentRect ? parentRect.height : 0;
+
+          // If parent has a measurable height, fill it. Otherwise, fill the remaining viewport height
+          // (useful for layouts with a top bar above the embedded content).
+          let targetH = parentH;
+          if (!targetH || targetH < 1) {
+            const top = wrapper.getBoundingClientRect().top;
+            targetH = Math.max(1, window.innerHeight - top);
+          }
+
+          wrapper.style.height = targetH + 'px';
+          wrapper.style.minHeight = targetH + 'px';
+        }
+
+        syncWrapperHeight();
+
+        let ro;
+        if (typeof ResizeObserver !== 'undefined') {
+          ro = new ResizeObserver(syncWrapperHeight);
+          ro.observe(wrapper);
+          if (wrapper.parentElement) ro.observe(wrapper.parentElement);
+        } else {
+          window.addEventListener('resize', syncWrapperHeight);
+        }
+
+        function updateParallax(e) {
+          const rect = scene.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const mouseX = (e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || centerX) - centerX;
+          const mouseY = (e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || centerY) - centerY;
+
+          layers.forEach(function(layer) {
+            const depth = parseFloat(layer.getAttribute('data-depth')) || 0;
+            const moveX = (mouseX * depth) / 10;
+            const moveY = (mouseY * depth) / 10;
+            layer.style.transform = 'translate(calc(-50% + ' + moveX + 'px), calc(-50% + ' + moveY + 'px))';
+          });
+        }
+
+        scene.addEventListener('mousemove', updateParallax);
+        scene.addEventListener('touchmove', updateParallax);
+
+        scene.addEventListener('mouseleave', function() {
+          layers.forEach(function(layer) {
+            layer.style.transform = 'translate(-50%, -50%)';
+          });
+        });
+      })();
+    `;
+    document.head.appendChild(script);
   }
 
   if (template === "error-animated") {
@@ -215,6 +252,30 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       (function() {
         const container = document.querySelector('.ef-animated-404-wrapper');
         if (!container) return;
+
+        function syncWrapperHeight() {
+          const parent = container.parentElement;
+          const parentRect = parent ? parent.getBoundingClientRect() : null;
+          const parentH = parentRect ? parentRect.height : 0;
+
+          let targetH = parentH;
+          if (!targetH || targetH < 1) {
+            const top = container.getBoundingClientRect().top;
+            targetH = Math.max(1, window.innerHeight - top);
+          }
+
+          container.style.height = targetH + 'px';
+          container.style.minHeight = targetH + 'px';
+        }
+
+        syncWrapperHeight();
+        if (typeof ResizeObserver !== 'undefined') {
+          const ro = new ResizeObserver(syncWrapperHeight);
+          ro.observe(container);
+          if (container.parentElement) ro.observe(container.parentElement);
+        } else {
+          window.addEventListener('resize', syncWrapperHeight);
+        }
         
         const numbersContainer = container.querySelector('#ef-animated-404-numbers');
         if (numbersContainer) {
@@ -349,6 +410,26 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "(function() {" +
       "  const container = document.querySelector('.ef-sad-bear-wrapper');" +
       "  if (!container) return;" +
+      "  function syncWrapperHeight() {" +
+      "    const parent = container.parentElement;" +
+      "    const parentRect = parent ? parent.getBoundingClientRect() : null;" +
+      "    const parentH = parentRect ? parentRect.height : 0;" +
+      "    let targetH = parentH;" +
+      "    if (!targetH || targetH < 1) {" +
+      "      const top = container.getBoundingClientRect().top;" +
+      "      targetH = Math.max(1, window.innerHeight - top);" +
+      "    }" +
+      "    container.style.height = targetH + 'px';" +
+      "    container.style.minHeight = targetH + 'px';" +
+      "  }" +
+      "  syncWrapperHeight();" +
+      "  if (typeof ResizeObserver !== 'undefined') {" +
+      "    const ro = new ResizeObserver(syncWrapperHeight);" +
+      "    ro.observe(container);" +
+      "    if (container.parentElement) ro.observe(container.parentElement);" +
+      "  } else {" +
+      "    window.addEventListener('resize', syncWrapperHeight);" +
+      "  }" +
       "  const codeElement = container.querySelector('#ef-sad-bear-code');" +
       "  const codeMessageElement = container.querySelector('#ef-sad-bear-code-message');" +
       "  const GLITCH_CHARS = " +
@@ -394,7 +475,7 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "      container.style.setProperty('--ef-sad-bear-Y', y);" +
       "    }" +
       "  }" +
-      "  document.body.addEventListener('mousemove', updatePosition);" +
+      "  container.addEventListener('mousemove', updatePosition);" +
       "  if (window.DeviceMotionEvent) { window.ondevicemotion = updatePosition; }" +
       "})();";
     document.head.appendChild(script);
@@ -415,6 +496,26 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "(function() {" +
       "  const container = document.querySelector('.ef-character-illustration-wrapper');" +
       "  if (!container) return;" +
+      "  function syncWrapperHeight() {" +
+      "    const parent = container.parentElement;" +
+      "    const parentRect = parent ? parent.getBoundingClientRect() : null;" +
+      "    const parentH = parentRect ? parentRect.height : 0;" +
+      "    let targetH = parentH;" +
+      "    if (!targetH || targetH < 1) {" +
+      "      const top = container.getBoundingClientRect().top;" +
+      "      targetH = Math.max(1, window.innerHeight - top);" +
+      "    }" +
+      "    container.style.height = targetH + 'px';" +
+      "    container.style.minHeight = targetH + 'px';" +
+      "  }" +
+      "  syncWrapperHeight();" +
+      "  if (typeof ResizeObserver !== 'undefined') {" +
+      "    const ro = new ResizeObserver(syncWrapperHeight);" +
+      "    ro.observe(container);" +
+      "    if (container.parentElement) ro.observe(container.parentElement);" +
+      "  } else {" +
+      "    window.addEventListener('resize', syncWrapperHeight);" +
+      "  }" +
       "  const codeText = " +
       escapedCode +
       ";" +
@@ -426,6 +527,46 @@ export function renderFlowScreen(options: RenderFlowScreenOptions): void {
       "  if (zeroElement && codeDigits[1]) { zeroElement.textContent = codeDigits[1]; }" +
       "  if (fourElement2 && codeDigits[2]) { fourElement2.textContent = codeDigits[2]; }" +
       "})();";
+    document.head.appendChild(script);
+  }
+
+  if (template === "error-sleeping-moon") {
+    const scriptId = `flowscreen-${template}-script`;
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.textContent = `
+      (function() {
+        const container = document.querySelector('.ef-sleeping-moon-wrapper');
+        if (!container) return;
+
+        function syncWrapperHeight() {
+          const parent = container.parentElement;
+          const parentRect = parent ? parent.getBoundingClientRect() : null;
+          const parentH = parentRect ? parentRect.height : 0;
+          let targetH = parentH;
+          if (!targetH || targetH < 1) {
+            const top = container.getBoundingClientRect().top;
+            targetH = Math.max(1, window.innerHeight - top);
+          }
+          container.style.height = targetH + 'px';
+          container.style.minHeight = targetH + 'px';
+        }
+
+        syncWrapperHeight();
+        if (typeof ResizeObserver !== 'undefined') {
+          const ro = new ResizeObserver(syncWrapperHeight);
+          ro.observe(container);
+          if (container.parentElement) ro.observe(container.parentElement);
+        } else {
+          window.addEventListener('resize', syncWrapperHeight);
+        }
+      })();
+    `;
     document.head.appendChild(script);
   }
 }

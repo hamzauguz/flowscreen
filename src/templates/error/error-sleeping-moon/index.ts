@@ -157,11 +157,12 @@ export const sleepingMoonTemplate: FlowScreenTemplate = {
 
 /* Sleeping Moon Error Template - Scoped Styles */
 .ef-sleeping-moon-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  position: relative;
+  min-height: 100%;
+  flex: 1;
+  min-height: max(360px, 100%);
   overflow: hidden;
   font-family: var(--ef-font-family, 'Lato', sans-serif);
   box-sizing: border-box;
@@ -179,7 +180,7 @@ export const sleepingMoonTemplate: FlowScreenTemplate = {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   background-image: linear-gradient(
     to bottom,

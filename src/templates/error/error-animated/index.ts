@@ -53,11 +53,12 @@ export const animated404Template: FlowScreenTemplate = {
 </div>`,
   css: `/* Animated 404 Template - Scoped Styles */
 .ef-animated-404-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+  position: relative;
+  min-height: 100%;
+  flex: 1;
+  min-height: max(360px, 100%);
   overflow: hidden;
   font-family: var(--ef-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   background: var(--ef-background, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
